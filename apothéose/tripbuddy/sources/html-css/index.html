@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+     <!-- Our custom CSS -->
+     <link rel="stylesheet" href="css/tripbuddy.css">
+     <!-- favicon -->
+    <title>TripBuddy</title>
+</head>
+<body>
+    <header>
+        <h1>Bienvenue sur TripBuddy</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#itineraire">Itinéraires</a></li>
+            <li><a href="#etapes">Étapes</a></li>
+        </ul>
+    </nav>
+
+    <section id="itineraire">
+        <h2>Liste des Itinéraires</h2>
+        <ul>
+            <!-- Utilisez une boucle pour afficher la liste des itinéraires depuis la base de données -->
+            <li><a href="#">Itinéraire 1</a></li>
+            <li><a href="#">Itinéraire 2</a></li>
+            <!-- Ajoutez plus d'itinéraires dynamiquement -->
+        </ul>
+
+        <h3>Créer un nouvel Itinéraire</h3>
+        <form action="/creer-itineraire" method="post">
+            <label for="titre">Titre de l'itinéraire:</label>
+            <input type="text" id="titre" name="titre" required>
+            <!-- Autres champs du formulaire pour les détails de l'itinéraire -->
+            <button type="submit">Créer</button>
+        </form>
+    </section>
+
+    <section id="etapes">
+        <h2>Liste des Étapes</h2>
+        <ul>
+            <!-- Utilisez une boucle pour afficher la liste des étapes depuis la base de données -->
+            <li>Étape 1: Visite de Paris</li>
+            <li>Étape 2: Découverte de Rome</li>
+            <!-- Ajoutez plus d'étapes dynamiquement -->
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 TripBuddy</p>
+    </footer>
+</body>
+</html>

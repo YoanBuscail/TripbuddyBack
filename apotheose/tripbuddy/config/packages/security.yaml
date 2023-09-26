@@ -49,8 +49,7 @@ security:
     access_control:
     # * J'ouvre le back office à condition d'être admin
         - { path: ^/admin, roles: ROLE_ADMIN}
-        # ! API
-        # - { path: ^/api, roles: ROLE_ADMIN, methods: POST}
+    # ! API
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 

@@ -43,6 +43,18 @@
             <!-- Autres champs du formulaire pour les détails de l'itinéraire -->
             <button type="submit">Créer</button>
         </form>
+         <!--intégration de la carte -->
+        <div id="map" style="width: 100%; height: 400px;"></div>
+        <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZWtvMjIiLCJhIjoiY2xtdWJzdDF3MGVxczJrbXE1cmZieDVkdSJ9.LJ3KK5r0BsrSS54yp5WXvg';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11', // Style de la carte
+            center: [LONGITUDE, LATITUDE], // Coordonnées initiales
+            zoom: ZOOM_LEVEL // Niveau de zoom initial
+        });
+        </script>
+
     </section>
 
     <section id="etapes">

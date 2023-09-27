@@ -1,19 +1,66 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<!-- Header -->
+<!doctype html>
+<html lang="fr">
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <!-- Our custom CSS -->
+    <!-- asset('css/oflix.css) ci dessous la methode asset me permet de mettre un lien vers le dossier public puis le fait de mettre 'css/oflix.css' en parametre permet de dire qu'on veut utiliser le fichier oflix.css qu'il y a dans le dossier css -->
+    <link rel="stylesheet" href="{{ asset('css/tripbuddy.css') }}">
+    <!-- favicon -->
+    <link rel="shortcut icon" href="{{ asset('tripbuddy.png') }}" type="image/x-icon">
+
+    <title>TripBuddy</title>
+</head>
     <body>
-        {% block body %}{% endblock %}
-    </body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #fcb320">
+        <div class="container-fluid">
+            <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
+                <img src="{{ asset('tripbuddy.png') }}" height="24" alt="Logo TripBuddy">
+                <span class="header-logo__title">TripBuddy</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Utilisateurs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active"  href="#">Itinéraires</a>
+                    </li>
+    </nav>
+           
+    {% block body %}{% endblock %}
+
+
+    <footer class="container-fluid py-4 border-top text-center">
+        <span class="text-muted">TripBuddy - Tous droits réservés
+            <br><small>Oclock 2023</small>
+        </span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous">
+    </script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+    -->
+</body>
+
 </html>

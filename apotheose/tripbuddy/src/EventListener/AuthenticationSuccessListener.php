@@ -29,7 +29,7 @@ class AuthenticationSuccessListener
 
         $data['data'] = array(
             'roles' => $user->getRoles(),
-            #'id' => $this->$user->getId(), 
+            'id' =>$user->getId(), 
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
         );

@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ItineraryRepository")
+ * @ORM\Entity(repositoryClass=ItineraryRepository::class)
  */
 class Itinerary
 {

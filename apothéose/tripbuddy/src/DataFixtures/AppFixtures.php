@@ -32,8 +32,8 @@ class AppFixtures extends Fixture
 
         //  ! USERS
         $admin = new User();
-        $admin->setName($faker->word());
         $admin->setFirstname($faker->word());
+        $admin->setLastname($faker->word());
         $admin->setEmail("admin@oclock.io");
         $admin->setRoles(["ROLE_ADMIN"]);
         // ici j'utilise le passwordhasher pour hasher le mot de passe par rapport à mes infos dans le security.yaml
@@ -45,7 +45,7 @@ class AppFixtures extends Fixture
         $user = new User();
         $user->setEmail("user@oclock.io");
         $user->setFirstname($faker->word());
-        $user->setName($faker->word());
+        $user->setLastname($faker->word());
         $user->setRoles(["ROLE_USER"]);
         $user->setPassword($this->passwordHasher->hashPassword($admin, "user"));
 
@@ -75,7 +75,6 @@ class AppFixtures extends Fixture
             $step->setLatitude($faker->randomFloat(6, 0, 80));
             $step->setLongitude($faker->randomFloat(6, 0, 80));
             $step->setDescription(($faker->paragraph()));
-            $step->setFavorite(true); // ou false en fonction de vos besoins
             $stepList [] = $step;
 
             for ($g = 1; $g <= mt_rand(1, 3); $g++) {
@@ -92,8 +91,6 @@ class AppFixtures extends Fixture
             $itinerary->setTitle($faker->word(3));
             $itinerary->setStartDate(new \DateTimeImmutable($faker->date()));
             $itinerary->setEndDate(new \DateTimeImmutable($faker->date()));
-            $step->setFavorite(true);
-    
 
             $itinerary->setUser($user);
 

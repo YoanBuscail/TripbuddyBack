@@ -25,9 +25,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
-    private $name;
+    private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $email;
+    private $lastname;
 
     /**
      * @var string The hashed password
@@ -65,14 +65,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getEmail(): ?string
     {
-        return $this->name;
+        return $this->email;
     }
 
-    public function setName(string $name): self
+    public function setEmail(string $email): self
     {
-        $this->name = $name;
+        $this->email = $email;
 
         return $this;
     }
@@ -89,14 +89,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getLastname(): ?string
     {
-        return $this->email;
+        return $this->lastname;
     }
 
-    public function setEmail(string $email): self
+    public function setLastname(string $lastname): self
     {
-        $this->email = $email;
+        $this->lastname = $lastname;
 
         return $this;
     }
@@ -112,7 +112,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-     /**
+
+    /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
@@ -130,9 +131,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    /**
+     * @see UserInterface
+     */
     public function getRoles(): ?array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
@@ -142,18 +150,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getUser(): ?self
-    {
-        return $this->user;
-    }
-
-    public function setUser(?self $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-        /**
+    /**
      * @return Collection<int, Itinerary>
      */
     public function getItinerary(): Collection

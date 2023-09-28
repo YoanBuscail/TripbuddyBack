@@ -27,21 +27,23 @@ class Itinerary
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $startdate;
+    private $startDate;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $enddate;
+    private $endDate;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $favorite;
+
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="itineraries")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="itinerary")
      */
     private $user;
+
     /**
      * @ORM\ManyToMany(targetEntity=Step::class, inversedBy="itineraries")
      */
@@ -69,26 +71,26 @@ class Itinerary
         return $this;
     }
 
-    public function getStartdate(): ?\DateTimeImmutable
+    public function getStartDate(): ?\DateTimeImmutable
     {
-        return $this->startdate;
+        return $this->startDate;
     }
 
-    public function setStartdate(?\DateTimeImmutable $startdate): self
+    public function setStartDate(?\DateTimeImmutable $startDate): self
     {
-        $this->startdate = $startdate;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getEnddate(): ?\DateTimeImmutable
+    public function getEndDate(): ?\DateTimeImmutable
     {
-        return $this->enddate;
+        return $this->endDate;
     }
 
-    public function setEnddate(?\DateTimeImmutable $enddate): self
+    public function setEndDate(?\DateTimeImmutable $endDate): self
     {
-        $this->enddate = $enddate;
+        $this->endDate = $endDate;
 
         return $this;
     }
@@ -98,7 +100,7 @@ class Itinerary
         return $this->favorite;
     }
 
-    public function setFavorite(bool $favorite): self
+    public function setFavorite(?bool $favorite): self
     {
         $this->favorite = $favorite;
 

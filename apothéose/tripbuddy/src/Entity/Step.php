@@ -39,10 +39,6 @@ class Step
      */
     private $description;
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private $favorite;
-    /**
      * @ORM\ManyToMany(targetEntity=Itinerary::class, mappedBy="step")
      */
     private $itineraries;
@@ -107,17 +103,6 @@ class Step
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-    public function isFavorite(): ?bool
-    {
-        return $this->favorite;
-    }
-
-    public function setFavorite(bool $favorite): self
-    {
-        $this->favorite = $favorite;
 
         return $this;
     }

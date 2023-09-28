@@ -3,65 +3,65 @@
 namespace App\Controller\Back;
 
 use App\Entity\User;
-use App\Entity\Itinerary;
+use App\Form\UserType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+/**
+ * @Route("/admin")
+ */
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/admin/login", name="admin_login")
+     * @Route("/login", name="app_back_login")
      */
-    public function adminLogin(AuthorizationCheckerInterface $authorizationChecker)
-{
-    // Vérifiez si l'utilisateur a le rôle ROLE_ADMIN
-    if ($authorizationChecker->isGranted('ROLE_ADMIN')) {
-        // Redirigez l'utilisateur vers la page du dashboard
-        return $this->redirectToRoute('admin_dashboard');
-    }
-
-    return $this->render('back/admin/login.html.twig');
-}
-
-    /**
-     * @Route("/admin/dashboard", name="admin_dashboard")
-     */
-    public function adminDashboard()
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->render('back/admin/dashboard.html.twig');
-    }
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
 
-    /**
-     * @Route("/admin/users", name="list_users")
-     */
-    public function listUsers(UserRepository $userRepository): Response
-    {
-        $users = $userRepository->findAll();
-        
-        return $this->render('back/user/list.html.twig', [
-            'users' => $users,
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        // Check if the user is already authenticated
+        if ($this->getUser()) {
+        // User is already authenticated, redirect to the desired page
+        return $this->redirectToRoute('app_back_index');
+        }
+
+        return $this->render('back/admin/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error'         => $error
         ]);
     }
 
     /**
-     * @Route("/admin/users/{user_id}", name="view_user")
+     * @Route("/dashboard", name="app_back_index", methods={"GET"})
      */
-    public function viewUserDetails($user_id, UserRepository $userRepository)
+    public function index(UserRepository $userRepository): Response
     {
-        $user = $this->$userRepository->find($user_id);
-        
+        return $this->render('back/admin/index.html.twig', [
+            'users' => $userRepository->findAll(),
+        ]);
+    }
+    
+    /**
+     * @Route("/users", name="app_back_user_list", methods={"GET"})
+     */
+    public function list(UserRepository $userRepository): Response
+    {
         return $this->render('back/user/list.html.twig', [
-            'user' => $user,
+            'users' => $userRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/admin/users/new", name="create_user", methods={"GET", "POST"})
+     * @Route("/new", name="app_back_user_new", methods={"GET", "POST"})
      */
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -79,19 +79,29 @@ class AdminController extends AbstractController
 
             $userRepository->add($user, true);
 
-            return $this->redirectToRoute('list_users', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_user_list', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('back/user/list.html.twig', [
+        return $this->renderForm('back/user/new.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
     }
 
     /**
-     * @Route("/admin/users/{user_id}/edit", name="edit_user")
+     * @Route("/{id}", name="app_back_user_show", methods={"GET"})
      */
-    public function editUser(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function show(User $user): Response
+    {
+        return $this->render('back/user/show.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
+     */
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $form = $this->createForm(UserType::class, $user, ["custom_option" => "edit"]);
         $form->handleRequest($request);
@@ -100,7 +110,7 @@ class AdminController extends AbstractController
 
             $userRepository->add($user, true);
 
-            return $this->redirectToRoute('list_users', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_user_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/user/edit.html.twig', [
@@ -110,20 +120,21 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{user_id}/update", name="update_user", methods={"POST"})
+     * @Route("/{id}", name="app_back_user_delete", methods={"POST"})
      */
-    public function updateUser(Request $request, $user_id, UserRepository $userRepository)
+    public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
-        $user = $this->$userRepository->find($user_id);
-        // Code pour valider et mettre à jour les données de l'utilisateur
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $userRepository->remove($user, true);
+        }
+
+        return $this->redirectToRoute('app_back_user_list', [], Response::HTTP_SEE_OTHER);
     }
 
     /**
-     * @Route("/admin/users/{user_id}/delete", name="delete_user", methods={"DELETE"})
+     * @Route("/", name="app_back_logout")
      */
-    public function deleteUser($user_id, UserRepository $userRepository)
+    public function logout(): void
     {
-        $user = $this->$userRepository->find($user_id);
-        // Code pour supprimer l'utilisateur
     }
 }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2 class="mb-4">Dashboard Administrateur</h2>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <a href="{{ path('app_back_user_list') }}" class="btn btn-primary btn-lg btn-block">Gérer les utilisateurs</a>
+            </div>
+            <div class="col-md-6">
+                <a href="#" class="btn btn-success btn-lg btn-block">Gérer les itinéraires</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

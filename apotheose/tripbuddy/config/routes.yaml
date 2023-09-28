@@ -3,3 +3,6 @@
 #    controller: App\Controller\DefaultController::index
 api_login_check:
     path: /api/login_check
+error_404_handler:
+    path: /error404
+    controller: App\Controller\ErrorController::error404

@@ -3,28 +3,37 @@
 {% block title %}User{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+    <div class="container mt-4">
+        <h1>Utilisateur {{ user.firstname }} {{ user.lastname }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ user.id }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                    <th>Prénom</th>
+                    <td>{{ user.firstname }}</td>
+                <tr>
+                </tr>
+                    <th>Nom</th>
+                    <td>{{ user.lastname }}</td>
+                <tr>
+                <tr>
+                    <th>Roles</th>
+                    <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <a class="btn btn-sm btn-secondary" href="{{ path('app_back_user_list') }}">back to list</a>
+        <a class="btn btn-sm btn-secondary" href="{{ path('app_back_user_list') }}">back to list</a>
 
-    <a class="btn btn-sm btn-warning" href="{{ path('app_back_user_edit', {'id': user.id}) }}">edit</a>
+        <a class="btn btn-sm btn-warning" href="{{ path('app_back_user_edit', {'id': user.id}) }}">edit</a>
 
-    {{ include('back/user/_delete_form.html.twig') }}
+        {{ include('back/user/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

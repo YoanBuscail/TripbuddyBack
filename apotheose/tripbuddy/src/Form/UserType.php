@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class UserType extends AbstractType
 {
@@ -22,8 +23,12 @@ class UserType extends AbstractType
                 "placeholder" => "example@oclock.io"
             ]
         ])
-        ->add('firstname')
-        ->add('lastname')
+        ->add('firstname', TextType::class, [
+            "label" => "Prénom"
+        ])
+        ->add('lastname', TextType::class, [
+            "label" => "Nom"
+        ])
         ->add('roles', ChoiceType::class, [
             "choices" => [
                 "Administrateur" => "ROLE_ADMIN",
@@ -38,8 +43,15 @@ class UserType extends AbstractType
             $builder
             ->add('password',RepeatedType::class,[
                 "type" => PasswordType::class,
-                "first_options" => ["label" => "Saisissez un mot de passe","help" => "Le mot de passe doit avoir minimum 4 caractères"],
-                "second_options" => ["label" => "Confirmez le mot de passe"],
+                "first_options" => [
+                    "label" => "Saisissez un mot de passe",
+                    "help" => "Le mot de passe doit avoir minimum 4 caractères",
+                    "attr" => ["class" => "form-control"], // Ajoutez la classe ici
+                ],
+                "second_options" => [
+                    "label" => "Confirmez le mot de passe",
+                    "attr" => ["class" => "form-control"], // Ajoutez la classe ici
+                ],
                 "invalid_message" => "Les champs doivent être identiques"
             ]);
         }

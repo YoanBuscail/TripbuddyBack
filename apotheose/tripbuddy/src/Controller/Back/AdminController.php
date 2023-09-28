@@ -5,19 +5,53 @@ namespace App\Controller\Back;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
- * @Route("/admin/users")
+ * @Route("/admin")
  */
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/", name="app_back_user_list", methods={"GET"})
+     * @Route("/login", name="app_back_login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        // Check if the user is already authenticated
+        if ($this->getUser()) {
+        // User is already authenticated, redirect to the desired page
+        return $this->redirectToRoute('app_back_index');
+        }
+
+        return $this->render('back/admin/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error'         => $error
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard", name="app_back_index", methods={"GET"})
+     */
+    public function index(UserRepository $userRepository): Response
+    {
+        return $this->render('back/admin/index.html.twig', [
+            'users' => $userRepository->findAll(),
+        ]);
+    }
+    
+    /**
+     * @Route("/users", name="app_back_user_list", methods={"GET"})
      */
     public function list(UserRepository $userRepository): Response
     {
@@ -95,5 +129,12 @@ class AdminController extends AbstractController
         }
 
         return $this->redirectToRoute('app_back_user_list', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/", name="app_back_logout")
+     */
+    public function logout(): void
+    {
     }
 }

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+                
+        <h1 class="mb-4">Liste des Itinéraires</h1>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Etapes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for itinerary in itineraries %}
+                <tr>
+                    <td>{{ itinerary.title }}</td>
+                    <td>{{ itinerary.startDate|date('d-m-Y') }}</td>
+                    <td>{{ itinerary.endDate|date('d-m-Y') }}</td>
+                    {% for step in itinerary.step %}
+                        <td>{{ step.name }}</td> <!-- Remplacez "name" par la propriété de l'étape que vous souhaitez afficher -->
+                    {% endfor %}
+                    <td>
+                        <a class="btn btn-sm btn-primary" href="{{ path('app_back_itinerary_show', {'id': itinerary.id}) }}">show</a>
+                        <a class="btn btn-sm btn-warning" href="#">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    
+{% endblock %}

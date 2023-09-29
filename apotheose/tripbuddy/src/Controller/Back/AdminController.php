@@ -2,8 +2,10 @@
 
 namespace App\Controller\Back;
 
+use App\Entity\Itinerary;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\ItineraryRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -138,5 +140,23 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_back_user_list', [], Response::HTTP_SEE_OTHER);
     }
 
-    
+     /**
+     * @Route("/itineraries", name="app_back_itinerary_list", methods={"GET"})
+     */
+    public function listItineraries(ItineraryRepository $itineraryRepository): Response
+    {
+        return $this->render('back/itinerary/list.html.twig', [
+            'itineraries' => $itineraryRepository->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/itineraries/{id}", name="app_back_itinerary_show", methods={"GET"})
+     */
+    public function showItinerary(Itinerary $itinerary): Response
+    {
+        return $this->render('back/itinerary/show.html.twig', [
+            'itinerary' => $itinerary,
+        ]);
+    }
 }

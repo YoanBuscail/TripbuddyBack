@@ -39,6 +39,15 @@ class ItineraryRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllWithUser()
+    {
+        return $this->createQueryBuilder('i')
+            ->addSelect('u') 
+            ->leftJoin('i.user', 'u') // Jointure avec la relation user de l'itinéraire
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Itinerary[] Returns an array of Itinerary objects
 //     */

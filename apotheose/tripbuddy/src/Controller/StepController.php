@@ -11,13 +11,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * @Route("/api/steps")
- */
+
 class StepController extends AbstractController
 {
     /**
-     * @Route("/", name="create_step", methods={"POST"})
+     * @Route("/api/steps", name="create_step", methods={"POST"})
      */
     public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager): Response
     {
@@ -47,7 +45,7 @@ class StepController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="get_step", methods={"GET"})
+     * @Route("/api/steps/{id}", name="get_step", methods={"GET"})
      */
     public function show(Step $step, SerializerInterface $serializer): Response
     {
@@ -61,7 +59,7 @@ class StepController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="update_step", methods={"PUT"})
+     * @Route("/api/steps/{id}", name="update_step", methods={"PUT"})
      */
     public function update(Request $request, Step $step, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager): Response
     {
@@ -89,7 +87,7 @@ class StepController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="delete_step", methods={"DELETE"})
+     * @Route("/api/steps/{id}", name="delete_step", methods={"DELETE"})
      */
     public function delete(Step $step, EntityManagerInterface $entityManager): Response
     {

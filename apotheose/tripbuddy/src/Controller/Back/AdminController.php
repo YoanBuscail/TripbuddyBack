@@ -159,4 +159,16 @@ class AdminController extends AbstractController
             'itinerary' => $itinerary,
         ]);
     }
+
+    /**
+     * @Route("/admin/itineraries/{id}/delete", name="app_back_itinerary_delete", methods={"POST"})
+     */
+    public function deleteItinerary(Request $request, Itinerary $itinerary, ItineraryRepository $itineraryRepository ): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$itinerary->getId(), $request->request->get('_token'))) {
+            $itineraryRepository->remove($itinerary, true);
+        }
+
+        return $this->redirectToRoute('app_back_itinerary_list', [], Response::HTTP_SEE_OTHER);
+    }
 }

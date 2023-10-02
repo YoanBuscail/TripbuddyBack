@@ -16,7 +16,7 @@ class ItineraryController extends AbstractController
     /**
      * Create a new itinerary.
      * 
-     * @Route("/", name="create_itinerary", methods={"POST"})
+     * @Route("/api/itineraries", name="create_itinerary", methods={"POST"})
      */
     public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager): Response
     {

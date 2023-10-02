@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="container mt-4">
-        <a class="btn btn-sm btn-success mb-2" href="{{ path('app_back_user_new') }}">Create new</a>
+        <a class="btn btn-sm btn-success mb-2" href="{{ path('app_back_user_new') }}">Créer</a>
         
         <h1 class="mb-4">Liste des Utilisateurs</h1>
 
@@ -24,8 +24,8 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                     <td>
-                        <a class="btn btn-sm btn-primary" href="{{ path('app_back_user_show', {'id': user.id}) }}">show</a>
-                        <a class="btn btn-sm btn-warning" href="{{ path('app_back_user_edit', {'id': user.id}) }}">edit</a>
+                        <a class="btn btn-sm btn-primary" href="{{ path('app_back_user_show', {'id': user.id}) }}">Voir</a>
+                        <a class="btn btn-sm btn-warning" href="{{ path('app_back_user_edit', {'id': user.id}) }}">Modifier</a>
                     </td>
                 </tr>
             {% else %}

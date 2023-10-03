@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 
@@ -111,5 +112,17 @@ class StepController extends AbstractController
 
         // Retourner une réponse 204 No Content
         return new Response(null, 204);
+    }
+
+
+    /**
+     * @Route("/api/steps/favorites", name="get_steps", methods={"GET"})
+     */
+    public function getStepFavorites(StepRepository $stepRepository): JsonResponse
+    {
+    $results = $stepRepository->getStepFavorites();
+
+    // Retourne les résultats en format JSON
+    return new JsonResponse($results, 200);
     }
 }

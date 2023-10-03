@@ -38,6 +38,24 @@ class StepRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    
+    /**
+     * getStepFavorites
+     *
+     * @return Step[]
+     */
+    public function getStepFavorites()
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select('s', 'COUNT(i.id) AS nombre_de_fois_choisie')
+            ->leftJoin('s.itineraries', 'it')
+            ->leftJoin('it.user', 'u')
+            ->groupBy('s.id')
+            ->orderBy('nombre_de_fois_choisie', 'DESC')
+            ->setMaxResults(5);
+
+        return $qb->getQuery()->getResult();
+    }
 
 //    /**
 //     * @return Step[] Returns an array of Step objects

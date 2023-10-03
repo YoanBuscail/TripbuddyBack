@@ -52,6 +52,7 @@ class UserController extends AbstractController
 
         return new JsonResponse($userData, 200);
     }
+
     /**
      * Create a new user
      * @Route("/api/users", name="create_user", methods={"POST"})
@@ -61,6 +62,8 @@ class UserController extends AbstractController
         // Récupérer les données JSON de la requête
         $data = json_decode($request->getContent(), true);
 
+        $data['roles'] = ['ROLE_USER'];
+        
         // Créer une nouvelle instance de l'entité User
         $user = new User();
 

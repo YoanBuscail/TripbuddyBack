@@ -6,6 +6,7 @@ use App\Repository\ItineraryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ItineraryRepository::class)
@@ -16,26 +17,31 @@ class Itinerary
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"itinerary"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"itinerary"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"itinerary"})
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"itinerary"})
      */
     private $endDate;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"itinerary"})
      */
     private $favorite;
 
@@ -46,6 +52,7 @@ class Itinerary
 
     /**
      * @ORM\ManyToMany(targetEntity=Step::class, inversedBy="itineraries")
+     * @Groups({"itinerary"})
      */
     private $step;
 

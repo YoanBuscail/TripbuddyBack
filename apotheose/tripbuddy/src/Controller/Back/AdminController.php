@@ -41,6 +41,13 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @Route("/", name="app_back_logout")
+     */
+    public function logout(): void
+    {
+    }
+
+    /**
      * @Route("/dashboard", name="app_back_index", methods={"GET"})
      */
     public function index(UserRepository $userRepository): Response
@@ -61,7 +68,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="app_back_user_new", methods={"GET", "POST"})
+     * @Route("/users/new", name="app_back_user_new", methods={"GET", "POST"})
      */
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -89,7 +96,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_back_user_show", methods={"GET"})
+     * @Route("/users/{id}", name="app_back_user_show", methods={"GET"})
      */
     public function show(User $user): Response
     {
@@ -99,7 +106,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
+     * @Route("/users/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -120,7 +127,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_back_user_delete", methods={"POST"})
+     * @Route("/admin/users/{id}/delete", name="app_back_user_delete", methods={"POST"})
      */
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
@@ -131,10 +138,5 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('app_back_user_list', [], Response::HTTP_SEE_OTHER);
     }
 
-    /**
-     * @Route("/", name="app_back_logout")
-     */
-    public function logout(): void
-    {
-    }
+    
 }

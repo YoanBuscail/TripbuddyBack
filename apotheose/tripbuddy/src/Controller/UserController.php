@@ -20,7 +20,7 @@ class UserController extends AbstractController
 
     /**
      * Read - Read
-     * @Route("/user", name="app_user")
+     * @Route("/users", name="app_user")
      */
     public function index(): JsonResponse
     {
@@ -108,7 +108,9 @@ class UserController extends AbstractController
         $user = $this->entityManager->getRepository(User::class)->find($user_id);
 
         if (!$user) {
-            return new JsonResponse(['message' => 'Utilisateur non trouvé'], 404);
+            // Charge la vue d'erreur personnalisée 
+            $errorView = $twig->render('error/error404.html.twig');
+            return new Response($errorView, Response::HTTP_NOT_FOUND);
         }
 
         $data = json_decode($request->getContent(), true);

@@ -14,13 +14,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 
-/**
- * @Route("/api/steps")
- */
+
 class StepController extends AbstractController
 {
     /**
-     * @Route("/", name="create_step", methods={"POST"})
+     * @Route("/api/steps", name="create_step", methods={"POST"})
      */
     public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, StepRepository $stepRepository): Response
     {
@@ -37,7 +35,6 @@ class StepController extends AbstractController
             return $this->json(["error" => "json invalide"], Response::HTTP_BAD_REQUEST);
         }
 
-        
         // je check si mon step contient des erreurs
         $errors = $validator->validate($step);
 
@@ -62,7 +59,7 @@ class StepController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="get_step", methods={"GET"})
+     * @Route("/api/steps/{id}", name="get_step", methods={"GET"})
      */
     public function show(Step $step, SerializerInterface $serializer): Response
     {
@@ -76,7 +73,7 @@ class StepController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="update_step", methods={"PUT"})
+     * @Route("/api/steps/{id}", name="update_step", methods={"PUT"})
      */
     public function update(Request $request, Step $step, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager): Response
     {
@@ -99,12 +96,12 @@ class StepController extends AbstractController
         // Enregistrer les modifications en base de données
         $entityManager->flush();
 
-        // Retourner une réponse 200 OK avec l'étape mise à jour en JSON)
+        // Retourner une réponse 200 OK avec l'étape mise à jour en JSON
         return $this->json($step, 200);
     }
 
     /**
-     * @Route("/{id}", name="delete_step", methods={"DELETE"})
+     * @Route("/api/steps/{id}", name="delete_step", methods={"DELETE"})
      */
     public function delete(Step $step, EntityManagerInterface $entityManager): Response
     {
@@ -112,7 +109,7 @@ class StepController extends AbstractController
         $entityManager->remove($step);
         $entityManager->flush();
 
-        // Retourner une réponse 204 No Content)
+        // Retourner une réponse 204 No Content
         return new Response(null, 204);
     }
 }

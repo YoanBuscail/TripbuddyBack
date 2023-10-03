@@ -82,7 +82,7 @@ class StepController extends AbstractController
         // Enregistrer les modifications en base de données
         $entityManager->flush();
 
-        // Retourner une réponse 200 OK avec l'étape mise à jour en JSON)
+        // Retourner une réponse 200 OK avec l'étape mise à jour en JSON
         return $this->json($step, 200);
     }
 
@@ -95,7 +95,7 @@ class StepController extends AbstractController
         $entityManager->remove($step);
         $entityManager->flush();
 
-        // Retourner une réponse 204 No Content)
+        // Retourner une réponse 204 No Content
         return new Response(null, 204);
     }
 }

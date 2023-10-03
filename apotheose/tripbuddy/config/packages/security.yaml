@@ -50,7 +50,11 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
     # * J'ouvre le back office à condition d'être admin
-        # - { path: ^/admin, roles: ROLE_ADMIN}
+        - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # Autoriser l'accès à la page admin/login à tous les utilisateurs, même ceux non authentifiés.
+
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        # Restreindre l'accès à toutes les autres pages sous /admin aux utilisateurs ayant le rôle ROLE_ADMIN.
         
     # ! API
         - { path: ^/api/login, roles: PUBLIC_ACCESS }

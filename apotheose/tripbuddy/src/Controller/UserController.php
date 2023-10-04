@@ -35,25 +35,57 @@ class UserController extends AbstractController
      */
     public function getUserById($user_id)
     {
-        // Récupérer l'utilisateur à partir de la base de données en utilisant $user_id.
+        // Récupère l'utilisateur à partir de la base de données en utilisant $user_id.
         $user = $this->entityManager->getRepository(User::class)->find($user_id);
 
         if (!$user) {
-            // si L'utilisateur n'a pas été trouvé, renvoyer une réponse 404.
+            // si L'utilisateur n'a pas été trouvé, renvoie une réponse 404.
             return new JsonResponse(['message' => 'Utilisateur non trouvé'], 404);
         }
 
-        // Convertir l'objet utilisateur en tableau ou en JSON pour la réponse.
+        // Convertit l'objet utilisateur en tableau ou en JSON pour la réponse.
         $userData = [
-                'id' => $user->getId(),
+            'id' => $user->getId(),
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
+            'itineraries' => [], //tableau vide pour stocker les itinéraires
+        ];
+
+        // Récupère les itinéraires de l'utilisateur
+        $itineraries = $user->getItinerary();
+
+        // Ajoute les itinéraires à la réponse JSON
+        foreach ($itineraries as $itinerary) {
+            $itineraryData = [
+                'id' => $itinerary->getId(),
+                'title' => $itinerary->getTitle(),
+                'steps' => [], //tableau vide pour stocker les steps
             ];
 
+            // Récupère les étapes de l'itinéraire
+            $steps = $itinerary->getStep();
+
+            // Ajoute les étapes à la réponse JSON
+            foreach ($steps as $step) {
+                $stepData = [
+                    'id' => $step->getId(),
+                    'description' => $step->getDescription(),
+                    'latitude' => $step->getLatitude(),
+                    'longitude' => $step->getLongitude(),
+                    'name' => $step->getName(),
+                ];
+                $itineraryData['steps'][] = $stepData;
+            }
+
+            $userData['itineraries'][] = $itineraryData;
+        }
+        
         return new JsonResponse($userData, 200);
     }
+
+
     /**
      * Create a new user
      * @Route("/api/users", name="create_user", methods={"POST"})
@@ -63,6 +95,8 @@ class UserController extends AbstractController
         // Récupérer les données JSON de la requête
         $data = json_decode($request->getContent(), true);
 
+        $data['roles'] = ['ROLE_USER'];
+        
         // Créer une nouvelle instance de l'entité User
         $user = new User();
 

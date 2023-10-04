@@ -2,12 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
@@ -57,7 +60,7 @@ class UserController extends AbstractController
      * Create a new user
      * @Route("/api/users", name="create_user", methods={"POST"})
      */
-    public function createUser(Request $request): JsonResponse
+    public function createUser(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         // Récupérer les données JSON de la requête
         $data = json_decode($request->getContent(), true);
@@ -78,8 +81,9 @@ class UserController extends AbstractController
             $user->setLastname($data['lastname']);
         }
         if (isset($data['password'])) {
-            // Gérer le hachage du mot de passe ici
-            $user->setPassword($data['password']);
+            // Hacher le mot de passe
+            $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+            $user->setPassword($hashedPassword);
         }
         if (isset($data['roles'])) {
             // Gérer les rôles ici
@@ -112,7 +116,7 @@ class UserController extends AbstractController
 
         if (!$user) {
             // Charge la vue d'erreur personnalisée 
-            $errorView = $twig->render('error/error404.html.twig');
+            $errorView = $this->render('error/error404.html.twig');
             return new Response($errorView, Response::HTTP_NOT_FOUND);
         }
 

@@ -33,8 +33,8 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                login_path: app_back_login
-                check_path: app_back_login
+                login_path: app_back_login # Chemin de la page de connexion
+                check_path: app_back_login # Chemin de vérification des informations de connexion
                 default_target_path: app_back_index
             logout:
                 path: app_back_logout
@@ -54,9 +54,9 @@ security:
         
     # ! API
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
-
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/api/profile, roles: ROLE_USER }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

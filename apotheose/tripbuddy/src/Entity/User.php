@@ -24,22 +24,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champ email ne peut pas être vide.")
+     * @Assert\Email(message="Veuillez entrer une adresse email valide.")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champ prénom ne peut pas être vide.")
+     * @Assert\Length(min=2, max=255, minMessage="Le prénom doit comporter au moins {{ limit }} caractères.", maxMessage="Le prénom ne peut pas dépasser {{ limit }} caractères.")
      */
     private $firstname;
+    
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champ nom de famille ne peut pas être vide.")
+     * @Assert\Length(min=2, max=255, minMessage="Le nom de famille doit comporter au moins {{ limit }} caractères.", maxMessage="Le nom de famille ne peut pas dépasser {{ limit }} caractères.")
      */
     private $lastname;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champ mot de passe ne peut pas être vide.")
+     * @Assert\Length(min=6, minMessage="Le mot de passe doit comporter au moins {{ limit }} caractères.")
      */
     private $password;
     /**

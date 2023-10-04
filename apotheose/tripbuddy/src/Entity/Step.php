@@ -48,6 +48,10 @@ class Step
      * @ORM\ManyToMany(targetEntity=Category::class, mappedBy="step")
      */
     private $categories;
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isFeatured; 
 
     public function __construct()
     {
@@ -107,7 +111,17 @@ class Step
 
         return $this;
     }
+    public function getIsFeatured(): ?bool
+    {
+        return $this->isFeatured;
+    }
 
+    public function setIsFeatured(bool $isFeatured): self
+    {
+        $this->isFeatured = $isFeatured;
+
+        return $this;
+    }
     /**
      * @return Collection<int, Itinerary>
      */

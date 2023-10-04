@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ItineraryRepository::class)
@@ -17,31 +18,32 @@ class Itinerary
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"itinerary"})
+     * @Groups({"itinerary", "step"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"itinerary"})
+     * @Groups({"itinerary", "step"})
+     * @Assert\NotBlank(message="Le titre est obligatoire")
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Groups({"itinerary"})
+     * @Groups({"itinerary", "step"})
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Groups({"itinerary"})
+     * @Groups({"itinerary", "step"})
      */
     private $endDate;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"itinerary"})
+     * @Groups({"itinerary", "step"})
      */
     private $favorite;
 
@@ -52,7 +54,7 @@ class Itinerary
 
     /**
      * @ORM\ManyToMany(targetEntity=Step::class, inversedBy="itineraries")
-     * @Groups({"itinerary"})
+     * @Groups({"itinerary", "step"})
      */
     private $step;
 

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=StepRepository::class)
@@ -24,6 +25,7 @@ class Step
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"step"})
+     * @Assert\NotBlank(message="Le nom est obligatoire")
      */
     private $name;
 
@@ -47,13 +49,13 @@ class Step
 
     /**
      * @ORM\ManyToMany(targetEntity=Itinerary::class, mappedBy="step")
-     * @Groups({"step"})
+     * @Groups({"itinerary"})
      */
     private $itineraries;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, mappedBy="step")
-     * @Groups({"step"})
+     * 
      */
     private $categories;
 

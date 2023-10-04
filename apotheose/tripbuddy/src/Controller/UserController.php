@@ -10,6 +10,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+<<<<<<< HEAD
+=======
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+>>>>>>> feature-sqlforstep
 
 class UserController extends AbstractController
 {
@@ -85,7 +89,10 @@ class UserController extends AbstractController
         return new JsonResponse($userData, 200);
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature-sqlforstep
     /**
      * Create a new user
      * @Route("/api/users", name="create_user", methods={"POST"})

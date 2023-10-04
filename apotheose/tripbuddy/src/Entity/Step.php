@@ -6,6 +6,7 @@ use App\Repository\StepRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=StepRepository::class)
@@ -16,36 +17,43 @@ class Step
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"step"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"step"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"step"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"step"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"step"})
      */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity=Itinerary::class, mappedBy="step")
+     * @Groups({"step"})
      */
     private $itineraries;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, mappedBy="step")
+     * @Groups({"step"})
      */
     private $categories;
     /**

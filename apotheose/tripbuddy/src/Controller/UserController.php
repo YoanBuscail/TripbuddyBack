@@ -6,13 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\Annotation\Security;
 use App\Entity\User;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\FormInterface;
 
 class UserController extends AbstractController
 {
@@ -44,13 +45,21 @@ class UserController extends AbstractController
         // Récupérer l'utilisateur à partir de la base de données en utilisant $user_id
         try {
             $user = $this->entityManager->getRepository(User::class)->find($user_id);
+        if (!$user) {
+            throw new EntityNotFoundException('Utilisateur non trouvé');
+        }
         } catch (EntityNotFoundException $e) {
             // L'utilisateur n'a pas été trouvé, renvoyer une réponse 404.
-            return new JsonResponse(['message' => 'Utilisateur non trouvé'], 404);
+            return new JsonResponse(['message' => $e->getMessage()], 404);
         } catch (\Exception $e) {
             // Gérer des erreurs de base de données.
             return new JsonResponse(['message' => 'Une erreur s\'est produite lors de la récupération de l\'utilisateur.'], 500);
         }
+
+        if ($user !== $this->getUser()) {
+            throw new AccessDeniedException("Vous n'avez pas le droit d'accéder à ce profil.");
+        }
+
         // Convertir l'objet utilisateur en tableau ou en JSON pour la réponse.
         $userData = [
             'id' => $user->getId(),
@@ -71,6 +80,10 @@ class UserController extends AbstractController
     public function getOwnProfile()
     {
         $user = $this->getUser();
+
+        if ($user !== $this->getUser()) {
+            throw new AccessDeniedException("Vous n'avez pas le droit d'accéder à ce profil.");
+        }
 
         // Convertir l'objet utilisateur en données de profil
         $profileData = [
@@ -162,12 +175,6 @@ class UserController extends AbstractController
         // Créer une nouvelle instance de l'entité User
         $user = new User();
 
-        // Créer le formulaire en utilisant UserType
-        $form = $this->createForm(UserType::class, $user);
-
-        // Gérer la soumission du formulaire
-        $form->handleRequest($request);
-
         // Remplir les attributs de l'utilisateur avec les données de la requête
         if (isset($data['email'])) {
             $user->setEmail($data['email']);
@@ -181,7 +188,7 @@ class UserController extends AbstractController
         if (isset($data['password'])) {
             // Gérer le hachage du mot de passe ici
             $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
-            // reste plus qu'à setter le nouveau mot de passe 
+            // Reste plus qu'à setter le nouveau mot de passe 
             $user->setPassword($hashedPassword);
         }
         if (isset($data['roles'])) {
@@ -189,46 +196,33 @@ class UserController extends AbstractController
             $user->setRoles($data['roles']);
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Persister le nouvel utilisateur dans la base de données
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+        // Valider les données de l'utilisateur
+        $errors = $this->validator->validate($user);
 
-            // Retourner une réponse JSON avec l'utilisateur créé et un code de statut 201 (Created)
-            $userData = [
-                'id' => $user->getId(),
-                'firstname' => $user->getFirstname(),
-                'lastname' => $user->getLastname(),
-                'email' => $user->getEmail(),
-                'roles' => $user->getRoles(),
-            ];
+        if (count($errors) > 0) {
+            // S'il y a des erreurs de validation, retourner une réponse JSON avec les erreurs
+            $formErrors = [];
+            foreach ($errors as $error) {
+                $formErrors[] = $error->getMessage();
+            }
 
-            return new JsonResponse($userData, 201);
-        } else {
-            // Si le formulaire n'est pas valide, retourner une réponse JSON avec les erreurs de validation
-            $formErrors = $this->getFormErrors($form);
             return new JsonResponse(['message' => 'Erreurs de validation', 'errors' => $formErrors], 400);
         }
-    }
 
-    // Fonction pour récupérer les erreurs de validation du formulaire
-    private function getFormErrors(FormInterface $form): array
-    {
-        $errors = [];
-        foreach ($form->getErrors(true) as $error) {
-            $errors[] = $error->getMessage();
-        }
+        // Persister le nouvel utilisateur dans la base de données
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
-        foreach ($form->all() as $childForm) {
-            if ($childForm instanceof FormInterface) {
-                $childErrors = $this->getFormErrors($childForm);
-                if (!empty($childErrors)) {
-                    $errors[$childForm->getName()] = $childErrors;
-                }
-            }
-        }
+        // Retourner une réponse JSON avec l'utilisateur créé et un code de statut 201 (Created)
+        $userData = [
+            'id' => $user->getId(),
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'email' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+        ];
 
-        return $errors;
+        return new JsonResponse($userData, 201);
     }
     /**
      * Update User

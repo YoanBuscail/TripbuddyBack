@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -20,6 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user"})
      */
     private $id;
 
@@ -27,6 +29,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champ email ne peut pas être vide.")
      * @Assert\Email(message="Veuillez entrer une adresse email valide.")
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Groups({"user"})
      */
     private $email;
 
@@ -34,6 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champ prénom ne peut pas être vide.")
      * @Assert\Length(min=2, max=255, minMessage="Le prénom doit comporter au moins {{ limit }} caractères.", maxMessage="Le prénom ne peut pas dépasser {{ limit }} caractères.")
+     * @Groups({"user"})
      */
     private $firstname;
     
@@ -41,6 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champ nom de famille ne peut pas être vide.")
      * @Assert\Length(min=2, max=255, minMessage="Le nom de famille doit comporter au moins {{ limit }} caractères.", maxMessage="Le nom de famille ne peut pas dépasser {{ limit }} caractères.")
+     * @Groups({"user"})
      */
     private $lastname;
 
@@ -53,11 +59,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
     /**
      * @ORM\Column(type="json")
+     * @Groups({"user"})
      */
     private $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Itinerary::class, mappedBy="user")
+     * @Groups({"user"})
      */
     private $itinerary;
 

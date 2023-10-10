@@ -17,3 +17,7 @@ get_steps:
 user:
     path: /user
     controller: App\Controller\UserController::index
+get_steps_favorites:
+    path: /api/steps/favorites
+    controller: App\Controller\StepController::getStepFavorites
+    methods: [GET]

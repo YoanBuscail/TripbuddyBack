@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 
@@ -22,7 +23,7 @@ class StepController extends AbstractController
      */
     public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager, StepRepository $stepRepository): Response
     {
-        // ICI je récupère le contenu de la requête à ce stade c'est du json 
+        // ICI je récupère le contenu de la requête à ce stade c'est du json
         $jsonContent = $request->getContent();
         // J'ai besoin d'une entité pour faire l'ajout en bdd donc je transforme le json en entité à l'aide du serializer
         // la méthode veut dire ce contenu, tu le transformes en step, le contenu de base est du json.
@@ -35,14 +36,13 @@ class StepController extends AbstractController
             return $this->json(["error" => "json invalide"], Response::HTTP_BAD_REQUEST);
         }
 
-        
         // je check si mon step contient des erreurs
         $errors = $validator->validate($step);
 
         // est ce qu'il y a au moins une erreur
         if (count($errors) > 0) {
-    
-            foreach($errors as $error){
+
+            foreach($errors as $error) {
                 // je me crée un tableau avec les erreurs en valeur et les champs concernés en index
                 $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
             }
@@ -52,15 +52,15 @@ class StepController extends AbstractController
         }
 
         // ! j'arrive je sais que mes constraints sont bien passés
-        $stepRepository->add($step,true);
+        $stepRepository->add($step, true);
 
         // on retour le step en json
-        
-        return $this->json($step,Response::HTTP_CREATED, ["groups" => "step"]);
+
+        return $this->json($step, Response::HTTP_CREATED, ["groups" => "step"]);
     }
 
     /**
-     * @Route("/api/steps/{id}", name="get_step", methods={"GET"})
+     * @Route("/api/steps/{id}", name="get_steps", methods={"GET"})
      */
     public function show(Step $step, SerializerInterface $serializer): Response
     {
@@ -112,5 +112,29 @@ class StepController extends AbstractController
 
         // Retourner une réponse 204 No Content
         return new Response(null, 204);
+    }
+
+
+    /**
+     * @Route("/api/steps/favorites", name="get_steps_favorites", methods={"GET"})
+     */
+    public function getStepFavorites(StepRepository $stepRepository): JsonResponse
+    {
+        $results = $stepRepository->getStepFavorites();
+
+        // Crée un tableau de résultats
+        $formattedResults = [];
+        foreach ($results as $result) {
+            $formattedResults[] = [
+                'name' => $result['name'],
+                'latitude' => $result['latitude'],
+                'longitude' => $result['longitude'],
+                'description' => $result['description'],
+                'nombre_de_fois_choisie' => $result['nombre_de_fois_choisie'],
+            ];
+        }
+
+        // Retourne les résultats en format JSON
+        return new JsonResponse($formattedResults, 200);
     }
 }

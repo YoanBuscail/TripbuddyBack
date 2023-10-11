@@ -3,21 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\User;
-use App\Form\UserType;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class UserController extends AbstractController
 {
@@ -49,9 +48,9 @@ class UserController extends AbstractController
         // Récupérer l'utilisateur à partir de la base de données en utilisant $user_id
         try {
             $user = $this->entityManager->getRepository(User::class)->find($user_id);
-        if (!$user) {
-            throw new EntityNotFoundException('Utilisateur non trouvé');
-        }
+            if (!$user) {
+                throw new EntityNotFoundException('Utilisateur non trouvé');
+            }
         } catch (EntityNotFoundException $e) {
             // L'utilisateur n'a pas été trouvé, renvoyer une réponse 404.
             return new JsonResponse(['message' => $e->getMessage()], 404);
@@ -62,9 +61,9 @@ class UserController extends AbstractController
 
         if ($user !== $this->getUser()) {
             throw new AccessDeniedException("Vous n'avez pas le droit d'accéder à ce profil.");
-        // Récupère l'utilisateur à partir de la base de données en utilisant $user_id.
-        $user = $this->entityManager->getRepository(User::class)->find($user_id);
-
+            // Récupère l'utilisateur à partir de la base de données en utilisant $user_id.
+            $user = $this->entityManager->getRepository(User::class)->find($user_id);
+        }
         if (!$user) {
             // si L'utilisateur n'a pas été trouvé, renvoie une réponse 404.
             return new JsonResponse(['message' => 'Utilisateur non trouvé'], 404);
@@ -198,6 +197,7 @@ class UserController extends AbstractController
 
         return new JsonResponse(['message' => 'Compte supprimé avec succès'], 200);
     }
+
     /**
      * Create a new user
      * @Route("/api/users", name="create_user", methods={"POST"})

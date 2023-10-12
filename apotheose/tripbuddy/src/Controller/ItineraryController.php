@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Itinerary;
+use App\Entity\Step;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,16 @@ class ItineraryController extends AbstractController
         $itinerary->setStartDate(new \DateTimeImmutable($data['startDate'])); 
         $itinerary->setEndDate(new \DateTimeImmutable($data['endDate'])); 
         $itinerary->setFavorite($data['favorite']); 
+
+        // Traitez les étapes
+        foreach ($data['steps'] as $stepData) {
+            $step = new Step();
+            $step->setName($stepData['name']);
+            $step->setLatitude($stepData['coordinates'][0]);
+            $step->setLongitude($stepData['coordinates'][1]);
+            // Associez le step à l'itinéraire
+            $itinerary->addStep($step);
+        }
 
         // Valider les données avec le Validator
         $errors = $validator->validate($itinerary);

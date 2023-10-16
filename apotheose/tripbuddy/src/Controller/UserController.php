@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class UserController extends AbstractController
@@ -228,13 +227,24 @@ class UserController extends AbstractController
             $user->setLastname($data['lastname']);
         }
         if (isset($data['password'])) {
-            // Hacher le mot de passe
-            $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
-            $user->setPassword($hashedPassword);
-        }
-        if (isset($data['roles'])) {
-            // Gérer les rôles ici
-            $user->setRoles($data['roles']);
+            // Définir le mot de passe en clair
+            $user->setPassword($data['password']);
+
+            $isValid = $this->validator->validate($data['password']);
+
+            // Si le mot de passe est valide, hacher le mot de passe et le définir
+            if ($isValid) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+                $user->setPassword($hashedPassword);
+            } else {
+                // Si le mot de passe n'est pas valide, retourner une réponse JSON avec un message d'erreur
+                return new JsonResponse(['message' => 'Le mot de passe doit comporter au moins 6 caractères.'], 400);
+            }
+
+            if (isset($data['roles'])) {
+                // Gérer les rôles ici
+                $user->setRoles($data['roles']);
+            }
         }
 
         // Valider les données de l'utilisateur
@@ -265,6 +275,8 @@ class UserController extends AbstractController
 
         return new JsonResponse($userData, 201);
     }
+
+
     /**
      * Update User
      * @Route("/api/users/{user_id}", name="update_user", methods={"PUT"})

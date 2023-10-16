@@ -23,7 +23,7 @@ class ItineraryController extends AbstractController
     {
         // Récupérer les données JSON de la requête
         $data = json_decode($request->getContent(), true);
-
+        
         $itinerary = new Itinerary();
         $itinerary->setTitle($data['title']); 
         $itinerary->setStartDate(new \DateTimeImmutable($data['startDate'])); 

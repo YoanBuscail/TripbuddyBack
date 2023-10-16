@@ -53,7 +53,7 @@ class Itinerary
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Step::class, inversedBy="itineraries")
+     * @ORM\ManyToMany(targetEntity=Step::class, inversedBy="itineraries", cascade={"persist"})
      * @Groups({"itinerary", "step"})
      */
     private $step;

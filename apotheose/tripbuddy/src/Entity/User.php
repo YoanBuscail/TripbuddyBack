@@ -57,6 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Length(min=6, minMessage="Le mot de passe doit comporter au moins {{ limit }} caractères.")
      */
     private $password;
+    
     /**
      * @ORM\Column(type="json")
      * @Groups({"user"})

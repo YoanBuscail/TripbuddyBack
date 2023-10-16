@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Itinerary;
 use App\Entity\Step;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,12 +24,13 @@ class ItineraryController extends AbstractController
     {
         // Récupérer les données JSON de la requête
         $data = json_decode($request->getContent(), true);
-
+        /** @var User $user */
+        $user = $this->getUser();
         $itinerary = new Itinerary();
         $itinerary->setTitle($data['title']); 
         $itinerary->setStartDate(new \DateTimeImmutable($data['startDate'])); 
-        $itinerary->setEndDate(new \DateTimeImmutable($data['endDate'])); 
-        $itinerary->setFavorite($data['favorite']); 
+        $itinerary->setEndDate(new \DateTimeImmutable($data['endDate']));
+        $itinerary->setUser($user);
 
         // Traitez les étapes
         foreach ($data['steps'] as $stepData) {
@@ -52,7 +54,7 @@ class ItineraryController extends AbstractController
         $entityManager->flush();
 
         // Retourner une réponse 201 Created avec l'itinéraire créé en JSON)
-        return $this->json($itinerary, 201);
+        return $this->json($itinerary, 201, [], [ 'groups' =>  'itinerary']);
     }
 
     /**
@@ -69,6 +71,29 @@ class ItineraryController extends AbstractController
 
         // Retourner une réponse avec l'itinéraire en JSON
         return new Response($jsonItinerary, 200, [
+            'Content-Type' => 'application/json',
+        ]);
+    }
+
+    /**
+     * Get a list of itineraries for a specific user by user ID.
+     *
+     * @Route("/api/itineraries", name="get_user_itineraries", methods={"GET"})
+     */
+    public function list(SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'utilisateur en base de données
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Récupérer les itinéraires de l'utilisateur
+        $itineraries = $user->getItinerary();
+
+        // Sérialiser les itinéraires en JSON
+        $jsonItineraries = $serializer->serialize($itineraries, 'json', ['groups' => 'itinerary']);
+
+        // Retourner une réponse avec les itinéraires en JSON
+        return new Response($jsonItineraries, 200, [
             'Content-Type' => 'application/json',
         ]);
     }

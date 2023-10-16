@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class UserController extends AbstractController
@@ -47,6 +46,7 @@ class UserController extends AbstractController
         // mettre un try catch au cas ou le json n'est pas bon
         // Récupérer l'utilisateur à partir de la base de données en utilisant $user_id
         try {
+            /** @var User $user */
             $user = $this->entityManager->getRepository(User::class)->find($user_id);
             if (!$user) {
                 throw new EntityNotFoundException('Utilisateur non trouvé');
@@ -61,8 +61,6 @@ class UserController extends AbstractController
 
         if ($user !== $this->getUser()) {
             throw new AccessDeniedException("Vous n'avez pas le droit d'accéder à ce profil.");
-            // Récupère l'utilisateur à partir de la base de données en utilisant $user_id.
-            $user = $this->entityManager->getRepository(User::class)->find($user_id);
         }
         if (!$user) {
             // si L'utilisateur n'a pas été trouvé, renvoie une réponse 404.
@@ -118,6 +116,7 @@ class UserController extends AbstractController
      */
     public function getOwnProfile()
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         if ($user !== $this->getUser()) {
@@ -143,6 +142,7 @@ class UserController extends AbstractController
      */
     public function updateOwnProfile(Request $request, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator)
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         // Récupérer les données JSON de la requête
@@ -228,9 +228,8 @@ class UserController extends AbstractController
             $user->setLastname($data['lastname']);
         }
         if (isset($data['password'])) {
-            // Hacher le mot de passe
-            $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
-            $user->setPassword($hashedPassword);
+            // Définir le mot de passe en clair
+            $user->setPassword($data['password']);
         }
         if (isset($data['roles'])) {
             // Gérer les rôles ici
@@ -250,6 +249,11 @@ class UserController extends AbstractController
             return new JsonResponse(['message' => 'Erreurs de validation', 'errors' => $formErrors], 400);
         }
 
+        // Si le mot de passe est valide, hacher le mot de passe et le définir
+        $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+        $user->setPassword($hashedPassword);
+
+
         // Persister le nouvel utilisateur dans la base de données
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -263,8 +267,11 @@ class UserController extends AbstractController
             'roles' => $user->getRoles(),
         ];
 
+        // TODO : utiliser les groupes de sérialisation (@Groups dans User) pour renvoyer juste $user, avec son group en contexte
         return new JsonResponse($userData, 201);
     }
+
+
     /**
      * Update User
      * @Route("/api/users/{user_id}", name="update_user", methods={"PUT"})

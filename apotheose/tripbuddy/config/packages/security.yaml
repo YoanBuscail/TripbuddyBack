@@ -59,10 +59,9 @@ security:
     # ! API
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/profile, roles: ROLE_USER }
+        - { path: ^/api/users, methods: [POST], roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/api/users, methods: [POST], roles: PUBLIC_ACCESS }
-        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

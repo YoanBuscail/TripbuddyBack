@@ -24,11 +24,13 @@ class ItineraryController extends AbstractController
     {
         // Récupérer les données JSON de la requête
         $data = json_decode($request->getContent(), true);
-        
+        /** @var User $user */
+        $user = $this->getUser();
         $itinerary = new Itinerary();
         $itinerary->setTitle($data['title']); 
         $itinerary->setStartDate(new \DateTimeImmutable($data['startDate'])); 
-        $itinerary->setEndDate(new \DateTimeImmutable($data['endDate'])); 
+        $itinerary->setEndDate(new \DateTimeImmutable($data['endDate']));
+        $itinerary->setUser($user);
 
         // Traitez les étapes
         foreach ($data['steps'] as $stepData) {
@@ -52,7 +54,7 @@ class ItineraryController extends AbstractController
         $entityManager->flush();
 
         // Retourner une réponse 201 Created avec l'itinéraire créé en JSON)
-        return $this->json($itinerary, 201, ['groups' => 'itinerary']);
+        return $this->json($itinerary, 201, [], [ 'groups' =>  'itinerary']);
     }
 
     /**

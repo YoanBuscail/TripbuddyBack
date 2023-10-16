@@ -231,10 +231,10 @@ class UserController extends AbstractController
             // Définir le mot de passe en clair
             $user->setPassword($data['password']);
 
-            $isValid = $this->validator->validate($data['password']);
+            $errors = $this->validator->validate($data['password']);
 
             // Si le mot de passe est valide, hacher le mot de passe et le définir
-            if ($isValid) {
+            if (!$errors->count()) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
                 $user->setPassword($hashedPassword);
             } else {

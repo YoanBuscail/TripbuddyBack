@@ -46,6 +46,7 @@ class UserController extends AbstractController
         // mettre un try catch au cas ou le json n'est pas bon
         // Récupérer l'utilisateur à partir de la base de données en utilisant $user_id
         try {
+            /** @var User $user */
             $user = $this->entityManager->getRepository(User::class)->find($user_id);
             if (!$user) {
                 throw new EntityNotFoundException('Utilisateur non trouvé');
@@ -60,8 +61,6 @@ class UserController extends AbstractController
 
         if ($user !== $this->getUser()) {
             throw new AccessDeniedException("Vous n'avez pas le droit d'accéder à ce profil.");
-            // Récupère l'utilisateur à partir de la base de données en utilisant $user_id.
-            $user = $this->entityManager->getRepository(User::class)->find($user_id);
         }
         if (!$user) {
             // si L'utilisateur n'a pas été trouvé, renvoie une réponse 404.
@@ -117,6 +116,7 @@ class UserController extends AbstractController
      */
     public function getOwnProfile()
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         if ($user !== $this->getUser()) {
@@ -142,6 +142,7 @@ class UserController extends AbstractController
      */
     public function updateOwnProfile(Request $request, UserPasswordHasherInterface $passwordHasher, ValidatorInterface $validator)
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         // Récupérer les données JSON de la requête

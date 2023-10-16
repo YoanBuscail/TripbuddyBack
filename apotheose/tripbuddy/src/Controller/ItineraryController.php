@@ -28,7 +28,6 @@ class ItineraryController extends AbstractController
         $itinerary->setTitle($data['title']); 
         $itinerary->setStartDate(new \DateTimeImmutable($data['startDate'])); 
         $itinerary->setEndDate(new \DateTimeImmutable($data['endDate'])); 
-        $itinerary->setFavorite($data['favorite']); 
 
         // Traitez les étapes
         foreach ($data['steps'] as $stepData) {

@@ -76,12 +76,13 @@ class ItineraryController extends AbstractController
     /**
      * Get a list of itineraries for a specific user by user ID.
      *
-     * @Route("/api/{userId}/itineraries", name="get_user_itineraries", methods={"GET"})
+     * @Route("/api/itineraries", name="get_user_itineraries", methods={"GET"})
      */
-    public function list(int $userId, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
+    public function list(SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
     {
         // Récupérer l'utilisateur en base de données
-        $user = $this->$entityManager->getRepository(User::class)->find($userId);
+        /** @var User $user */
+        $user = $this->getUser();
 
         // Récupérer les itinéraires de l'utilisateur
         $itineraries = $user->getItinerary();

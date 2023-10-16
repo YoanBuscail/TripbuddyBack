@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Itinerary;
 use App\Entity\Step;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,6 +69,28 @@ class ItineraryController extends AbstractController
 
         // Retourner une réponse avec l'itinéraire en JSON
         return new Response($jsonItinerary, 200, [
+            'Content-Type' => 'application/json',
+        ]);
+    }
+
+    /**
+     * Get a list of itineraries for a specific user by user ID.
+     *
+     * @Route("/api/{userId}/itineraries", name="get_user_itineraries", methods={"GET"})
+     */
+    public function list(int $userId, SerializerInterface $serializer, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'utilisateur en base de données
+        $user = $this->$entityManager->getRepository(User::class)->find($userId);
+
+        // Récupérer les itinéraires de l'utilisateur
+        $itineraries = $user->getItinerary();
+
+        // Sérialiser les itinéraires en JSON
+        $jsonItineraries = $serializer->serialize($itineraries, 'json', ['groups' => 'itinerary']);
+
+        // Retourner une réponse avec les itinéraires en JSON
+        return new Response($jsonItineraries, 200, [
             'Content-Type' => 'application/json',
         ]);
     }

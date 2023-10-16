@@ -267,6 +267,7 @@ class UserController extends AbstractController
             'roles' => $user->getRoles(),
         ];
 
+        // TODO : utiliser les groupes de sérialisation (@Groups dans User) pour renvoyer juste $user, avec son group en contexte
         return new JsonResponse($userData, 201);
     }
 

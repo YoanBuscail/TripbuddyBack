@@ -18,38 +18,37 @@ class Step
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"step"})
+     * @Groups({"step", "itinerary"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"step"})
+     * @Groups({"step", "itinerary"})
      * @Assert\NotBlank(message="Le nom est obligatoire")
      */
     private $name;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"step"})
+     * @Groups({"step", "itinerary"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"step"})
+     * @Groups({"step", "itinerary"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"step"})
+     * @Groups({"step", "itinerary"})
      */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity=Itinerary::class, mappedBy="step")
-     * @Groups({"itinerary"})
      */
     private $itineraries;
 

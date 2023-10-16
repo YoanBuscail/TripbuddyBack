@@ -52,7 +52,7 @@ class ItineraryController extends AbstractController
         $entityManager->flush();
 
         // Retourner une réponse 201 Created avec l'itinéraire créé en JSON)
-        return $this->json($itinerary, 201);
+        return $this->json($itinerary, 201, ['groups' => 'itinerary']);
     }
 
     /**

@@ -129,7 +129,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/admin/users/{id}", name="app_back_user_delete", methods={"DELETE"})
+     * @Route("/users/{id}", name="app_back_user_delete", methods={"POST"})
      */
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {

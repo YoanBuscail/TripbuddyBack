@@ -230,22 +230,10 @@ class UserController extends AbstractController
         if (isset($data['password'])) {
             // Définir le mot de passe en clair
             $user->setPassword($data['password']);
-
-            $errors = $this->validator->validate($data['password']);
-
-            // Si le mot de passe est valide, hacher le mot de passe et le définir
-            if (!$errors->count()) {
-                $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
-                $user->setPassword($hashedPassword);
-            } else {
-                // Si le mot de passe n'est pas valide, retourner une réponse JSON avec un message d'erreur
-                return new JsonResponse(['message' => 'Le mot de passe doit comporter au moins 6 caractères.'], 400);
-            }
-
-            if (isset($data['roles'])) {
-                // Gérer les rôles ici
-                $user->setRoles($data['roles']);
-            }
+        }
+        if (isset($data['roles'])) {
+            // Gérer les rôles ici
+            $user->setRoles($data['roles']);
         }
 
         // Valider les données de l'utilisateur
@@ -260,6 +248,11 @@ class UserController extends AbstractController
 
             return new JsonResponse(['message' => 'Erreurs de validation', 'errors' => $formErrors], 400);
         }
+
+        // Si le mot de passe est valide, hacher le mot de passe et le définir
+        $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
+        $user->setPassword($hashedPassword);
+
 
         // Persister le nouvel utilisateur dans la base de données
         $this->entityManager->persist($user);

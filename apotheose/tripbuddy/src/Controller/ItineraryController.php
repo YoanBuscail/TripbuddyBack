@@ -22,6 +22,13 @@ class ItineraryController extends AbstractController
      */
     public function create(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+
+        if (!$user) {
+            // L'utilisateur n'est pas connecté, renvoyer une réponse 401 Unauthorized
+            return $this->json(['message' => 'Vous devez être connecté pour créer un itinéraire.'], 401);
+        }
+
         // Récupérer les données JSON de la requête
         $data = json_decode($request->getContent(), true);
         /** @var User $user */

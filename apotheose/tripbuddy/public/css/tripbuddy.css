@@ -1,0 +1,15 @@
+html {
+    overflow-y: scroll;
+}
+
+.header-logo__title {
+    color: black;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0 0.8em 0 0.3em;
+    text-transform: uppercase;
+}
+
+.logo {
+    height: 48px;
+}

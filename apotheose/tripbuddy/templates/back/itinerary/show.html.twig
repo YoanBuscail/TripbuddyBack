@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Itinéraire "{{ itinerary.title }}"</h1>
+
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ itinerary.id }}</td>
+                </tr>
+                <tr>
+                    <th>Titre</th>
+                    <td>{{ itinerary.title }}</td>
+                <tr>
+                    <th>Créateur</th>
+                    <td>{{ itinerary.user.firstname }} {{ itinerary.user.lastname }}</td>
+                </tr>
+                </tr>
+                    <th>Date de départ</th>
+                    <td>{{ itinerary.startDate|date('d-m-Y') }}</td>
+                <tr>
+                </tr>
+                    <th>Date de fin</th>
+                    <td>{{ itinerary.endDate|date('d-m-Y') }}</td>
+                <tr>
+                <tr>
+                    <th>Etapes</th>
+                    <td>
+                        <ul>
+                            {% for step in itinerary.step %}
+                                <li>{{ step.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+
+        <a class="btn btn-sm btn-secondary" href="{{ path('app_back_itinerary_list') }}">Retour à la liste</a>
+
+        {{ include('back/itinerary/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

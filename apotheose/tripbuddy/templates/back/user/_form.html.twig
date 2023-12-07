@@ -1,0 +1,21 @@
+{{ form_start(form, {'attr': {'class': 'custom-form-class'}}) }}
+    {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'example@oclock.io'}}) }}
+    <br>
+    {{ form_row(form.firstname, {'attr': {'class': 'form-control'}}) }}
+    <br>
+    {{ form_row(form.lastname, {'attr': {'class': 'form-control'}}) }}
+    <br>
+    {% if form.password is defined %}
+        {{ form_row(form.password, {'attr': {'class': 'form-control'}}) }}
+    {% endif %}
+    <br>
+    {{ form_row(form.roles, {
+        'attr': {'class': 'form-checkbox'},
+        'row_attr': {'class': 'mb-2'} 
+        }) 
+    }}    
+    <br>
+    
+    
+    <button type="submit" class="btn btn-primary">{{ button_label|default('Sauvegarder') }}</button>
+{{ form_end(form) }}

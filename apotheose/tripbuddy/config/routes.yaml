@@ -1,0 +1,23 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+api_login_check:
+    path: /api/login_check
+error_404_handler:
+    path: /error404
+    controller: App\Controller\ErrorController::error404
+api_itineraries_get:
+    path: /api/itineraries
+    controller: App\Controller\ItineraryController::index
+    methods: [GET]
+get_steps:
+    path: /api/steps
+    controller: App\Controller\StepController::getSteps
+    methods: [GET]
+user:
+    path: /user
+    controller: App\Controller\UserController::index
+get_steps_favorites:
+    path: /api/steps/favorites
+    controller: App\Controller\StepController::getStepFavorites
+    methods: [GET]
